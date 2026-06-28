@@ -4,8 +4,10 @@ import { connectToDB } from "./db";
 import cors from "cors";
 import morgan from "morgan";
 import { ok } from "./utils/envelope";
-import {notFound} from "./middleware/notFound";
+import { notFound } from "./middleware/notFound";
 import { errorHandler } from "./middleware/errorHandler";
+import { clerkMiddleware } from '@clerk/express';
+import { authRouter } from './routes/auth/auth';
 
 async function mainEntryFun() {
     await connectToDB();
@@ -23,10 +25,13 @@ async function mainEntryFun() {
 
     app.use(express.json());
     app.use(morgan('dev'));
-
+    app.use(clerkMiddleware())
     app.get('/', (_req, res) => {
         res.status(200).json(ok({ message: 'Server is running' }))
     })
+
+    //auth routes
+    app.use('./auth', authRouter)
 
     app.use(notFound);
     app.use(errorHandler);

@@ -4,6 +4,7 @@ import { User } from '../model/User';
 import { asyncHandler } from '../utils/asyncHandler';
 import { getAuth } from "@clerk/express";
 
+//Checks if user is logged in
 export function requireAuth(req: Request, _res: Response, next: NextFunction) {
     const { userId } = getAuth(req);
 
@@ -16,6 +17,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
     next();
 }
 
+//Gets the current user from MongoDB
 export async function getDbUserFromReq(req: Request) {
     const { userId } = getAuth(req);
 
